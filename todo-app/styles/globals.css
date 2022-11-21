@@ -24,3 +24,35 @@ a {
     background: black;
   }
 }
+
+.todo-star-button {
+  visibility: hidden;
+  font-size: 30px;
+  cursor: pointer;
+}
+.todo-star-button:before {
+  content: "\2606";
+  position: absolute;
+  visibility: visible;
+}
+.todo-star-button:checked:before {
+  content: "\2605";
+  position: absolute;
+  color: #499557;
+}
+
+.round {
+  position: relative;
+}
+
+.round label {
+  background-color: #fff;
+  border: 1px solid #ccc;
+  border-radius: 50%;
+  cursor: pointer;
+  height: 28px;
+  left: 0;
+  position: absolute;
+  top: 0;
+  width: 28px;
+}

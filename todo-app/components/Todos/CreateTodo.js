@@ -2,30 +2,28 @@ import React from "react";
 import createTodo from "../../utils/todos/createTodo";
 import * as chrono from "chrono-node";
 import moment from "moment";
+import Calendar from "../Elements/Calendar";
+import NlpCalendar from "../Elements/NlpCalendar";
 
 const CreateTodo = ({ todos, setTodos }) => {
-  const [title, setTitle] = React.useState("");
+  const [title, setTitle] = React.useState(todos.title);
   const [date, setDate] = React.useState("");
-  const [dueDate, setDueDate] = React.useState("");
+  const [dueDate, setDueDate] = React.useState(todos.dueDate);
+  const [calendarSwitcher, setCalendarSwitcher] = React.useState(false);
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    setDueDate(moment(chrono.parseDate(date)).format("YYYY-MM-DD"));
-    const response = await createTodo(
-      title,
-      moment(chrono.parseDate(date)).format("YYYY-MM-DD")
-    );
+    setDueDate(moment(chrono.parseDate(date)).format("YYYY-MM-DD HH:mm:ss"));
+    const response = await createTodo(title, dueDate);
     const createdTodo = await response;
     setTodos([...todos, createdTodo]);
     setTitle("");
+    setDate("");
     setDueDate("");
   };
 
-  const parseDateFromText = (text) => {
-    const parsedDate = chrono.parseDate(text);
-    if (parsedDate) {
-      setDueDate(moment(parsedDate).format("YYYY-MM-DD"));
-    }
+  const handleCalendarSwitcher = () => {
+    setCalendarSwitcher(!calendarSwitcher);
   };
 
   return (
@@ -37,16 +35,21 @@ const CreateTodo = ({ todos, setTodos }) => {
           value={title}
           onChange={(e) => setTitle(e.target.value)}
         />
-        <input
-          type="date"
-          value={dueDate}
-          onChange={(e) => setDueDate(e.target.value)}
-        />
-        <input
-          type="text"
-          value={date}
-          onChange={(e) => setDate(e.target.value)}
-        />
+
+        {calendarSwitcher ? (
+          <Calendar dueDate={dueDate} setDueDate={setDueDate} />
+        ) : (
+          <NlpCalendar
+            dueDate={dueDate}
+            setDueDate={setDueDate}
+            date={date}
+            setDate={setDate}
+          />
+        )}
+
+        <button onClick={handleCalendarSwitcher}>Switch Calendar</button>
+
+        <button type="clear">Clear</button>
         <button type="submit">Create</button>
       </form>
     </div>
